@@ -1,28 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <a href="#" @click.prevent="login">login</a>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  methods: {
+    async login() {
+      await axios.get('http://localhost:8000/sanctum/csrf-cookie')
+
+      await axios.post('http://localhost:8000/login', {
+        email: 'ivan@ivan.com',
+        password: 'password'
+      }).then(async (response) => {
+        console.log('Response', response);
+        let response2 = await axios.get('http://localhost:8000/api/user')
+
+        console.log(response2)
+      });
+
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
